@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!--jQuery-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <!--reCAPTCHA script-->
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+        function timestamp() { var response = document.getElementById("g-recaptcha-response"); if (response == null || response.value.trim() == "") {var elems = JSON.parse(document.getElementsByName("captcha_settings")[0].value);elems["ts"] = JSON.stringify(new Date().getTime());document.getElementsByName("captcha_settings")[0].value = JSON.stringify(elems); } } setInterval(timestamp, 500); 
+    </script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <style>
+        .need-info-form {
+            max-width: 650px;
+            margin: 0 auto;
+            font-size: large;
+            padding: 30px;
+            line-height: 1.2em;
+            background-color: rgb(235, 245, 244);
+        }
+        .form-text {
+            border: 1px solid black;
+            border-radius: 4px;
+            width: 80%;
+            line-height: 1.5em;
+        }
+        .child2, .child3, .child4 {
+            display: none;
+        }
+        .child2-display, .child3-display, .child4-display {
+            display: block;
+        }
+        .btn {
+            width: 100%;
+        }
+        #addChild2, #addChild3 {
+            display: none;
+            margin-bottom: 22px;
+        }
+        .ui-datepicker {
+            width: 300px;
+            margin: 5px auto 0;
+            font: 12pt Arial, sans-serif;
+        }
+        #child2, #child3, #child4 {
+            border-top: 0.5px solid black;
+        }
+        .dropdown-menu {
+            width: 100%;
+        }
+    </style>
+</head>
+<body> 
+    <form class="p-5 need-info-form" action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST" id="form">
+
+        <!--Hidden Fields-->
+        <input type=hidden id="lead_source" name="lead_source" value="YLDP Site - Need More Information">
+        <input type=hidden name="oid" value="00D0r0000008dh3">
+        <input type=hidden name="retURL" value="https://yldp.org/thank-you">
+        <input type=hidden id="first_name" maxlength="40" name="first_name" size="20" type="text" value="Web"/>
+        <input type=hidden id="last_name" maxlength="80" name="last_name" size="20" type="text" value="Form"/><br>
+        <input type=hidden name='captcha_settings' value='{"keyname":"Jonathan_reCAPTCHA_Keys","fallback":"true","orgId":"00D0r0000008dh3","ts":""}'>
+
+        <div class="form-group">
+            <div class="py-3">Which YLDP Programs are you interested in?</div>
+            <select id="00N6A00000AFuSc" name="00N6A00000AFuSc" class="mul-select" multiple="true" style="width: 100%;" required>
+                <option value="Public Speaking">Public Speaking</option>
+                <option value="Mindfulness">Mindfulness</option>
+                <option value="LEAN Six Sigma Management Yellow Belt Certificate">LEAN Six Sigma Management Yellow Belt Certificate</option>
+                <option value="Leadership and Emotional Intelligence">Leadership and Emotional Intelligence</option>
+                <option value="Theatrics &amp; Improv">Theatrics &amp; Improv</option>
+            </select>
+        </div>
+
+        <!--Option to pick relationship-->
+        <div class="form-group">
+            <div class="py-3">Add details for a parent/guardian:</div>
+            <select class="form-control" id="relationshipChoice">
+                <option value="selectOption">--Select an option--</option>
+                <option value="mother">Mother</option>
+                <option value="father">Father</option>
+                <option value="guardian1">Guardian 1</option>
+            </select>
+            <label id="selectResult"/>
+        </div>
+
+        <!--Mother-->
+        <div class="form-group border-bottom border-secondary" id="mother1">
+            <label for="firstName"></label>
+            <input id="00N0r000000U5vk" maxlength="50" name="00N0r000000U5vk" size="20" type="text" class="form-control required-when-visible" placeholder="First name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="lastName"></label>
+            <input id="00N0r000000U5vm" maxlength="50" name="00N0r000000U5vm" size="20" type="text" class="form-control required-when-visible" placeholder="Last name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="email"></label>
+            <input id="00N0r000000U5vj" maxlength="80" name="00N0r000000U5vj" size="20" type="email" class="form-control required-when-visible" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br>
+            <label for="workPhone"></label>
+            <input id="00N0r000000U5vo" maxlength="14" name="00N0r000000U5vo" onkeydown="formatPhoneOnEnter(this, event);" onkeyup="formatPhone(this)" size="20" type="text" class="form-control required-when-visible" placeholder="Phone (Work)"/><br>
+            <!-- <label for="personalPhone"></label>
+            <input id="00N0r000000U5vn" maxlength="40" name="00N0r000000U5vn" onkeydown="formatPhoneOnEnter(this, event);" size="20" type="text" class="form-control" placeholder="Phone (Personal)" pattern="\d{10}"/><br> -->
+            <label for="otherInformation"></label>
+            <textarea id="00N0r000000U5vl" name="00N0r000000U5vl" type="text" wrap="soft" class="form-control" placeholder="Other Information (optional)"></textarea><br>
+        </div>
+        
+        <!--Father-->
+        <div class="form-group border-bottom border-secondary" id="father1">
+            <label for="firstName"></label>
+            <input id="00N0r000000U5vR" maxlength="50" name="00N0r000000U5vR" size="20" type="text" class="form-control required-when-visible" placeholder="First name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="lastName"></label>
+            <input id="00N0r000000U5vT" maxlength="50" name="00N0r000000U5vT" size="20" type="text" class="form-control required-when-visible" placeholder="Last name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="email"></label>
+            <input id="00N0r000000U5vQ" maxlength="80" name="00N0r000000U5vQ" size="20" type="email" class="form-control required-when-visible" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br>
+            <label for="workPhone"></label>
+            <input id="00N0r000000U5vV" maxlength="14" name="00N0r000000U5vV" onkeydown="formatPhoneOnEnter(this, event);" onkeyup="formatPhone(this)" size="20" type="text" class="form-control required-when-visible"/ placeholder="Phone (Work)"/><br>
+            <!-- <label for="personalPhone"></label>
+            <input id="00N0r000000U5vU" maxlength="10" name="00N0r000000U5vU" onkeydown="formatPhoneOnEnter(this, event);" size="20" type="text" class="form-control"/ placeholder="Phone (Personal)" pattern="\d{10}"/><br> -->
+            <label for="otherInformation"></label>
+            <textarea id="00N0r000000U5vS" name="00N0r000000U5vS" type="text" wrap="soft" class="form-control" placeholder="Other Information (optional)"></textarea><br>
+        </div>
+
+        <!--Guardian 1-->
+        <div class="form-group border-bottom border-secondary" id="guardian1-1">
+            <label for="firstName"></label>
+            <input id="00N0r000000U5vY" maxlength="50" name="00N0r000000U5vY" size="20" type="text" class="form-control required-when-visible" placeholder="First name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="lastName"></label>
+            <input id="00N0r000000U5va" maxlength="50" name="00N0r000000U5va" size="20" type="text" class="form-control required-when-visible" placeholder="Last name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="email"></label>
+            <input id="00N0r000000U5vX" maxlength="80" name="00N0r000000U5vX" size="20" type="email" class="form-control required-when-visible" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br>
+            <label for="workPhone"></label>
+            <input id="00N0r000000U5vc" maxlength="14" name="00N0r000000U5vc" onkeydown="formatPhoneOnEnter(this, event);" onkeyup="formatPhone(this)" size="20" type="text" class="form-control required-when-visible"/ placeholder="Phone (Work)"/><br>
+            <!-- <label for="personalPhone"></label>
+            <input id="00N0r000000U5vb" maxlength="10" name="00N0r000000U5vb" onkeydown="formatPhoneOnEnter(this, event);" size="20" type="text" class="form-control"/ placeholder="Phone (Personal)" pattern="\d{10}"/><br> -->
+            <label for="otherInformation"></label>
+            <textarea id="00N0r000000U5vZ" name="00N0r000000U5vZ" type="text" wrap="soft" class="form-control" placeholder="Other Information (optional)"></textarea><br>
+        </div>
+
+        <!--Guardian 2-->
+<!--         <div class="form-group" id="guardian2-1">
+            <label for="firstName"></label>
+            <input id="00N4S000000HM7R" maxlength="50" name="00N4S000000HM7R" size="20" type="text" class="form-text" placeholder="First name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="lastName"></label>
+            <input id="00N4S000000HM7b" maxlength="50" name="00N4S000000HM7b" size="20" type="text" class="form-text" placeholder="Last name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="email"></label>
+            <input id="00N4S000000HM7l" maxlength="80" name="00N4S000000HM7l" size="20" type="email" class="form-text" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br>
+            <label for="workPhone"></label>
+            <input id="00N4S000000HM7q" maxlength="10" name="00N4S000000HM7q" onkeydown="formatPhoneOnEnter(this, event);" size="20" type="text" class="form-text"/ placeholder="Phone (Work)" pattern="\d{10}"/><br>
+            <label for="personalPhone"></label>
+            <input id="00N4S000000HM81" maxlength="10" name="00N4S000000HM81" onkeydown="formatPhoneOnEnter(this, event);" size="20" type="text" class="form-text"/ placeholder="Phone (Personal)" pattern="\d{10}"/><br>
+            <label for="otherInformation"></label>
+            <textarea id="00N4S000000HM8F" name="00N4S000000HM8F" type="text" wrap="soft" class="form-text" placeholder="Other Information (optional)"></textarea><br>
+        </div> -->
+        
+        <div class="form-group border-bottom border-secondary">
+            <div class="pb-3">Add second parent or guardian (optional):</div>
+            <select class="form-control" id="addParentOrGuardian">
+                <option value="selectOption">--Select an option--</option>
+                <option value="mother">Mother</option>
+                <option value="father">Father</option>
+                <option value="guardian1">Guardian 1</option>
+            </select><br>
+        </div>
+
+        <!--Mother-->
+        <div class="form-group border-bottom border-secondary" id="mother2">
+            <label for="firstName"></label>
+            <input id="00N0r000000U5vk" maxlength="50" name="00N0r000000U5vk" size="20" type="text" class="form-control required-when-visible" placeholder="First name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="lastName"></label>
+            <input id="00N0r000000U5vm" maxlength="50" name="00N0r000000U5vm" size="20" type="text" class="form-control required-when-visible" placeholder="Last name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="email"></label>
+            <input id="00N0r000000U5vj" maxlength="80" name="00N0r000000U5vj" size="20" type="email" class="form-control required-when-visible" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br>
+            <label for="workPhone"></label>
+            <input id="00N0r000000U5vo" maxlength="14" name="00N0r000000U5vo" onkeydown="formatPhoneOnEnter(this, event);" onkeyup="formatPhone(this)" size="20" type="text" class="form-control required-when-visible" placeholder="Phone (Work)"/><br>
+            <!-- <label for="personalPhone"></label>
+            <input id="00N0r000000U5vn" maxlength="40" name="00N0r000000U5vn" onkeydown="formatPhoneOnEnter(this, event);" size="20" type="text" class="form-control" placeholder="Phone (Personal)" pattern="\d{10}"/><br> -->
+            <label for="otherInformation"></label>
+            <textarea id="00N0r000000U5vl" name="00N0r000000U5vl" type="text" wrap="soft" class="form-control" placeholder="Other Information (optional)"></textarea><br>
+        </div>
+        
+        <!--Father-->
+        <div class="form-group border-bottom border-secondary" id="father2">
+            <label for="firstName"></label>
+            <input id="00N0r000000U5vR" maxlength="50" name="00N0r000000U5vR" size="20" type="text" class="form-control required-when-visible" placeholder="First name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="lastName"></label>
+            <input id="00N0r000000U5vT" maxlength="50" name="00N0r000000U5vT" size="20" type="text" class="form-control required-when-visible" placeholder="Last name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="email"></label>
+            <input id="00N0r000000U5vQ" maxlength="80" name="00N0r000000U5vQ" size="20" type="email" class="form-control required-when-visible" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br>
+            <label for="workPhone"></label>
+            <input id="00N0r000000U5vV" maxlength="14" name="00N0r000000U5vV" onkeydown="formatPhoneOnEnter(this, event);" onkeyup="formatPhone(this)" size="20" type="text" class="form-control required-when-visible"/ placeholder="Phone (Work)"/><br>
+            <!-- <label for="personalPhone"></label>
+            <input id="00N0r000000U5vU" maxlength="10" name="00N0r000000U5vU" onkeydown="formatPhoneOnEnter(this, event);" size="20" type="text" class="form-control"/ placeholder="Phone (Personal)" pattern="\d{10}"/><br> -->
+            <label for="otherInformation"></label>
+            <textarea id="00N0r000000U5vS" name="00N0r000000U5vS" type="text" wrap="soft" class="form-control" placeholder="Other Information (optional)"></textarea><br>
+        </div>
+
+        <!--Guardian 1-->
+        <div class="form-group border-bottom border-secondary" id="guardian1-2">
+            <label for="firstName"></label>
+            <input id="00N0r000000U5vY" maxlength="50" name="00N0r000000U5vY" size="20" type="text" class="form-control required-when-visible" placeholder="First name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="lastName"></label>
+            <input id="00N0r000000U5va" maxlength="50" name="00N0r000000U5va" size="20" type="text" class="form-control required-when-visible" placeholder="Last name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="email"></label>
+            <input id="00N0r000000U5vX" maxlength="80" name="00N0r000000U5vX" size="20" type="email" class="form-control required-when-visible" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br>
+            <label for="workPhone"></label>
+            <input id="00N0r000000U5vc" maxlength="14" name="00N0r000000U5vc" onkeydown="formatPhoneOnEnter(this, event);" onkeyup="formatPhone(this)" size="20" type="text" class="form-control required-when-visible"/ placeholder="Phone (Work)"/><br>
+            <!-- <label for="personalPhone"></label>
+            <input id="00N0r000000U5vb" maxlength="10" name="00N0r000000U5vb" onkeydown="formatPhoneOnEnter(this, event);" size="20" type="text" class="form-control"/ placeholder="Phone (Personal)" pattern="\d{10}"/><br> -->
+            <label for="otherInformation"></label>
+            <textarea id="00N0r000000U5vZ" name="00N0r000000U5vZ" type="text" wrap="soft" class="form-control" placeholder="Other Information (optional)"></textarea><br>
+        </div>
+
+        <!--Guardian 2-->
+<!--         <div class="form-group" id="guardian2-2">
+            <label for="firstName"></label>
+            <input id="00N4S000000HM7R" maxlength="50" name="00N4S000000HM7R" size="20" type="text" class="form-text" placeholder="First name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="lastName"></label>
+            <input id="00N4S000000HM7b" maxlength="50" name="00N4S000000HM7b" size="20" type="text" class="form-text" placeholder="Last name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="email"></label>
+            <input id="00N4S000000HM7l" maxlength="80" name="00N4S000000HM7l" size="20" type="email" class="form-text" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br>
+            <label for="workPhone"></label>
+            <input id="00N4S000000HM7q" maxlength="10" name="00N4S000000HM7q" onkeydown="formatPhoneOnEnter(this, event);" size="20" type="text" class="form-text"/ placeholder="Phone (Work)" pattern="\d{10}"><br>
+            <label for="personalPhone"></label>
+            <input id="00N4S000000HM81" maxlength="10" name="00N4S000000HM81" onkeydown="formatPhoneOnEnter(this, event);" size="20" type="text" class="form-text"/ placeholder="Phone (Personal)" pattern="\d{10}"><br>
+            <label for="otherInformation"></label>
+            <textarea id="00N4S000000HM8F" name="00N4S000000HM8F" type="text" wrap="soft" class="form-text" placeholder="Other Information (optional)"></textarea><br>
+        </div>    -->         
+        
+        <!--Child 1-->
+        <div class="form-group" id="child1">
+            <div class="py-3">Child details:</div>
+            <label for="firstName"></label>
+            <input id="00N0r000000U5v2" maxlength="50" name="00N0r000000U5v2" size="20" type="text" class="form-control required-when-visible" placeholder="First name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="lastName"></label>
+            <input id="00N0r000000U5v4" maxlength="50" name="00N0r000000U5v4" size="20" type="text" class="form-control required-when-visible" placeholder="Last name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="dateOfBirth"></label>
+            <span class="dateInput dateOnlyInput"><input id="00N0r000000U5v1" name="00N0r000000U5v1" size="12" type="text" class="form-control required-when-visible" placeholder="Date of birth" pattern="\d{1,2}/\d{1,2}/\d{4}"/></span>
+            <div id="dateWarn"></div><br>
+            <label for="grade"></label>
+            <input id="00N0r000000U5v3" name="00N0r000000U5v3" size="20" type="number" class="form-control required-when-visible" placeholder="Grade" min="1" max="12"/><br>
+            <label for="schoolEmail"></label>
+            <input id="00N0r000000U5v6" maxlength="80" name="00N0r000000U5v6" size="20" type="email" class="form-control" placeholder="School email address (if applicable)" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br>
+<!--             <label for="personalEmail"></label>
+            <input id="00N0r000000U5v5" maxlength="80" name="00N0r000000U5v5" size="20" type="email" class="form-control" placeholder="Personal email address" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br> -->
+        </div>
+
+        <center><button type="button" id="addChild" class="btn btn-primary form-group">Add/Remove 2nd Child</button></center>
+
+        <!--Child 2-->
+        <div class="form-group child2  border-secondary" id="child2">
+            <div class="py-3">Child 2 details:</div>
+            <label for="firstName"></label>
+            <input id="00N0r000000U5v8" maxlength="50" name="00N0r000000U5v8" size="20" type="text" class="form-control required-when-visible" placeholder="First name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="lastName"></label>
+            <input id="00N0r000000U5vA" maxlength="50" name="00N0r000000U5vA" size="20" type="text" class="form-control required-when-visible" placeholder="Last name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="dateOfBirth"></label>
+            <span class="dateInput dateOnlyInput"><input id="00N0r000000U5v7" name="00N0r000000U5v7" size="12" type="text" class="form-control required-when-visible" placeholder="Date of birth" pattern="\d{1,2}/\d{1,2}/\d{4}"/></span>
+            <div id="dateWarn2"></div><br>
+            <label for="grade"></label>
+            <input id="00N0r000000U5v9" name="00N0r000000U5v9" size="20" type="number" class="form-control required-when-visible" placeholder="Grade" min="1" max="12"/><br>
+            <label for="schoolEmail"></label>
+            <input id="00N0r000000U5vC" maxlength="80" name="00N0r000000U5vC" size="20" type="email" class="form-control" placeholder="School email address (if applicable)" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br>
+<!--             <label for="personalEmail"></label>
+            <input id="00N0r000000U5vB" maxlength="80" name="00N0r000000U5vB" size="20" type="email" class="form-control" placeholder="Personal email address" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br> -->
+        </div>
+
+        <center><button type="button" id="addChild2" class="btn btn-primary">Add/Remove 3rd Child</button></center>
+
+        <!--Child 3-->
+        <div class="form-group child3 border-top border-secondary" id="child3">
+            <div class="py-3">Child 3 details:</div>
+            <label for="firstName"></label>
+            <input id="00N0r000000U5vE" maxlength="50" name="00N0r000000U5vE" size="20" type="text" class="form-control required-when-visible" placeholder="First name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="lastName"></label>
+            <input id="00N0r000000U5vG" maxlength="50" name="00N0r000000U5vG" size="20" type="text" class="form-control required-when-visible" placeholder="Last name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="dateOfBirth"></label>
+            <span class="dateInput dateOnlyInput"><input id="00N0r000000U5vD" name="00N0r000000U5vD" size="12" type="text" class="form-control required-when-visible" placeholder="Date of birth" pattern="\d{1,2}/\d{1,2}/\d{4}"/></span>
+            <div id="dateWarn3"></div><br>
+            <label for="grade"></label>
+            <input id="00N0r000000U5vF" name="00N0r000000U5vF" size="20" type="number" class="form-control required-when-visible" placeholder="Grade" min="1" max="12"/><br>
+            <label for="schoolEmail"></label>
+            <input id="00N0r000000U5vI" maxlength="80" name="00N0r000000U5vI" size="20" type="text" class="form-control" placeholder="School email address (if applicable)" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br>
+<!--             <label for="personalEmail"></label>
+            <input id="00N0r000000U5vH" maxlength="80" name="00N0r000000U5vH" size="20" type="text" class="form-control" placeholder="Personal email address" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br> -->
+        </div>
+
+        <center><button type="button" id="addChild3" class="btn btn-primary">Add/Remove 4th Child</button></center>
+
+        <!--Child 4-->
+        <div class="form-group child4 border-top border-secondary" id="child4">
+            <div class="py-3">Child 4 details:</div>
+            <label for="firstName"></label>
+            <input id="00N0r000000U5vK" maxlength="50" name="00N0r000000U5vK" size="20" type="text" class="form-control required-when-visible" placeholder="First name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="lastName"></label>
+            <input id="00N0r000000U5vM" maxlength="50" name="00N0r000000U5vM" size="20" type="text" class="form-control required-when-visible" placeholder="Last name" pattern="^[a-zA-Z]+$"/><br>
+            <label for="dateOfBirth"></label>
+            <span class="dateInput dateOnlyInput"><input id="00N0r000000U5vJ" name="00N0r000000U5vJ" size="12" type="text" class="form-control required-when-visible" placeholder="Date of birth" pattern="\d{1,2}/\d{1,2}/\d{4}"/></span>
+            <div id="dateWarn4"></div><br>
+            <label for="grade"></label>
+            <input id="00N0r000000U5vL" name="00N0r000000U5vL" size="20" type="number" class="form-control required-when-visible" placeholder="Grade" min="1" max="12"/><br>
+            <label for="schoolEmail"></label>
+            <input id="00N0r000000U5vO" maxlength="80" name="00N0r000000U5vO" size="20" type="text" class="form-control" placeholder="School email address (if applicable)" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br>
+            <!-- <label for="personalEmail"></label> 
+            <input id="00N0r000000U5vN" maxlength="80" name="00N0r000000U5vN" size="20" type="text" class="form-control" placeholder="Personal email address" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/><br> -->
+        </div>    
+
+        <div class="form-group">
+            <div class="py-3">Please select your county:</div>
+            <select id="00N0r000000UCrG" name="00N0r000000UCrG" title="County" class="form-control" required>
+                <option value="">--Select an option--</option>
+                <option value="Atlantic">Atlantic</option>
+                <option value="Bergen">Bergen</option>
+                <option value="Burlington">Burlington</option>
+                <option value="Camden">Camden</option>
+                <option value="Cape May">Cape May</option>
+                <option value="Cumberland">Cumberland</option>
+                <option value="Gloucester">Gloucester</option>
+                <option value="Hudson">Hudson</option>
+                <option value="Hunterdon">Hunterdon</option>
+                <option value="Mercer">Mercer</option>
+                <option value="Middlesex">Middlesex</option>
+                <option value="Monmouth">Monmouth</option>
+                <option value="Morris">Morris</option>
+                <option value="Ocean">Ocean</option>
+                <option value="Passaic">Passaic</option>
+                <option value="Salem">Salem</option>
+                <option value="Somerset">Somerset</option>
+                <option value="Sussex">Sussex</option>
+                <option value="Union">Union</option>
+                <option value="Warren">Warren</option>
+            </select>
+        </div>
+
+        <div class="g-recaptcha row justify-content-md-center" data-sitekey="fake-key"></div><br>
+        <div id="recaptcha-error"></div>
+        <center><input type="submit" name="submit" class="btn btn-primary form-group" id="submitYldpForm"></center>
+    </form>
+    <script src="scripts-for-need-more-info-form.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+        function timestamp() { var response = document.getElementById("g-recaptcha-response"); if (response == null || response.value.trim() == "") {var elems = JSON.parse(document.getElementsByName("captcha_settings")[0].value);elems["ts"] = JSON.stringify(new Date().getTime());document.getElementsByName("captcha_settings")[0].value = JSON.stringify(elems); } } setInterval(timestamp, 500); 
+    </script>
+    <script src="scripts.js"></script>
+    <title>Document</title>
+    <style>
+        #web-to-lead-form {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Helvetica', sans-serif;
+        }
+        #form-title {
+            border-left: 3px solid black;
+            font-size: 1.2em;
+        }
+        .invalid-feedback {
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>    
+    <form id="web-to-lead-form" action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST" class="needs-validation" novalidate>
+        <input type=hidden id="lead_source" name="lead_source" value="YLDP Site - Drop Us A Line">
+        <input type=hidden name='captcha_settings' value='{"keyname":"Jonathan_Keys","fallback":"true","orgId":"00D3C000000915I","ts":""}'>
+        <input type=hidden name="oid" value="00D3C000000915I">
+        <input type=hidden name="retURL" value="https://www.yldp.org">
+            
+            <!--  ----------------------------------------------------------------------  -->
+            <!--  NOTE: These fields are optional debugging elements. Please uncomment    -->
+            <!--  these lines if you wish to test in debug mode.                          -->
+            <!--  <input type="hidden" name="debug" value=1>                              -->
+            <!--  <input type="hidden" name="debugEmail"                                  -->
+            <!--  value="jonathan@jonathanmorrismusic.com">                               -->
+            <!--  ----------------------------------------------------------------------  -->
+<!--        <div class="font-weight-bold pl-3" id="form-title">DROP US A LINE:</div> -->
+
+        <div class="form-row pt-0 px-2 pb-2 mt-0">
+            <div class="col p-0 mr-2">
+                <label for="first_name"></label><input class="form-control" id="first_name" maxlength="40" name="first_name" size="20" type="text" placeholder="First Name" pattern="[a-zA-Z]+" required/>
+                <div class="invalid-feedback">
+                    Please enter your first name.
+                </div>
+            </div>
+                
+            <div class="col p-0 ml-2">
+                <label for="last_name"></label><input class="form-control" id="last_name" maxlength="80" name="last_name" size="20" type="text" placeholder="Last Name" pattern="[a-zA-Z]+" required/>
+                <div class="invalid-feedback">
+                    Please enter your last name.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row p-2">    
+            <label for="email"></label><input class="form-control" id="email" maxlength="80" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" size="20" type="text" placeholder="Email" required/>
+            <div class="invalid-feedback">
+                Please enter a valid email.
+            </div>
+        </div>
+            
+        <div class="form-row p-2">    
+            <label for="company"></label><input class="form-control" id="company" maxlength="40" name="company" size="20" type="text" placeholder="Company" pattern="[a-zA-z0-9\s\.]+" required/>
+            <div class="invalid-feedback">
+                Please enter a company. If none, please enter N/A.
+            </div>
+        </div>
+            
+        <div class="form-row p-2">    
+            <textarea class="form-control" id="00N3C000005MIPF" name="00N3C000005MIPF" rows="3" type="text" wrap="soft" placeholder="Enter details here" required></textarea>
+            <div class="invalid-feedback">
+                Please enter some details.
+            </div>
+        </div>
+            
+        <div class="g-recaptcha p-1" data-sitekey="fake-key"></div>
+        <input type="submit" name="submit" class="btn btn-outline-primary my-2 ml-1">
+    </form>
+</body>
+</html>

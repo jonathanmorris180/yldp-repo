@@ -1,0 +1,259 @@
+<script>
+
+  /*** PASTE THIS SCRIPT DIRECTLY INTO THE HEADERS AND FOOTERS EXTENSION ***
+  **** EDIT IT OFFLINE AND PASTE IN WHEN FINISHED - DO NOT EDIT FROM WITHIN THE PLUGIN ***/
+
+  function returnEmail() {
+    const email = document.getElementById('user_email_from_php');
+    if(email) {
+        console.log(email.innerHTML);
+        // Pass this to the iframe
+        jQuery("#visualforce-frame").attr("src", jQuery("#visualforce-frame").attr("src")+email.innerHTML);
+    }
+  }
+  returnEmail();
+
+  function getData() {
+    const frame = document.getElementById('visualforce-frame');
+    frame.src = frame.src + '&cache=' + Math.floor(Math.random() * 1000000000);
+  }
+
+  function returnRole() {
+    const role = document.getElementById('user_roles');
+    if(role) {
+      if(role.innerHTML !=='' && (/cart/.test(window.location.pathname) || /checkout/.test(window.location.pathname))) {
+        console.log(role.innerHTML);
+        document.querySelector('.col-1').setAttribute('style', 'max-width:100%');
+        document.querySelector('.col-2').setAttribute('style', 'display:none');
+        document.querySelector('.woocommerce-info').setAttribute('style', 'background-color:white');
+      } else if (/cart/.test(window.location.pathname) || /checkout/.test(window.location.pathname)) {
+          window.location.replace("http://www.yldp.org/login");
+      }
+    }
+  }
+  returnRole();
+
+  /*** WordPress runs jQuery in "no conflict mode," so replace $ with jQuery ***/
+
+  // at least one guardian is required
+  jQuery("#submitYldpForm").click(function(e) {
+    var checkDropdown = jQuery("#relationshipChoice");
+    if (checkDropdown.val() === "selectOption") {
+      var err = document.getElementById("selectResult");
+      err.innerHTML="Please select at least one parent/guardian";
+      err.style.color="red";
+      err.scrollIntoView();
+      e.preventDefault();
+    } else {
+      document.getElementById('selectResult').innerHTML="";
+      jQuery('#form').submit();
+    }
+  });
+
+  // checks that date of birth fields are in the past
+  function isFutureDate(idate){
+    var today = new Date(),
+    idate = idate.split("/");
+    
+    idate = new Date(idate[2], idate[0] - 1, idate[1]);
+    return (today - idate) < 0 ? true : false;
+  }
+    
+  jQuery("#submitYldpForm").click(function(e) {
+    var child1date = document.getElementById("00N0r000000U5v1"),
+        child2date = document.getElementById("00N0r000000U5v7"),
+        child3date = document.getElementById("00N0r000000U5vD"),
+        child4date = document.getElementById("00N0r000000U5vJ"),
+        resultDiv = document.getElementById("dateWarn"),
+        resultDiv2 = document.getElementById("dateWarn2"),
+        resultDiv3 = document.getElementById("dateWarn3"),
+        resultDiv4 = document.getElementById("dateWarn4");
+    if(isFutureDate(child1date.value)){
+        resultDiv.innerHTML = "Please select a date in the past";
+        resultDiv.scrollIntoView();
+        resultDiv.style.color = "red";
+        resultDiv2.innerHTML = "";
+        resultDiv3.innerHTML = "";
+        resultDiv4.innerHTML = "";
+        e.preventDefault();
+    } else if(isFutureDate(child2date.value)) {
+        resultDiv2.innerHTML = "Please select a date in the past";
+        resultDiv2.scrollIntoView();
+        resultDiv2.style.color = "red";
+        resultDiv.innerHTML = "";
+        resultDiv3.innerHTML = "";
+        resultDiv4.innerHTML = "";
+        e.preventDefault();
+    } else if(isFutureDate(child3date.value)) {
+        resultDiv3.innerHTML = "Please select a date in the past";
+        resultDiv3.scrollIntoView();
+        resultDiv3.style.color = "red";
+        resultDiv.innerHTML = "";
+        resultDiv2.innerHTML = "";
+        resultDiv4.innerHTML = "";
+        e.preventDefault();
+    } else if(isFutureDate(child4date.value)) {
+        resultDiv4.innerHTML = "Please select a date in the past";
+        resultDiv4.scrollIntoView();
+        resultDiv4.style.color = "red";
+        resultDiv.innerHTML = "";
+        resultDiv2.innerHTML = "";
+        resultDiv3.innerHTML = "";
+        e.preventDefault();
+    } else {
+        resultDiv.innerHTML = "";
+        resultDiv2.innerHTML = "";
+        resultDiv3.innerHTML = "";
+        resultDiv4.innerHTML = "";
+        jQuery('#form').submit();
+    }
+  });
+
+  // format phone numbers
+  function formatPhone(obj) {
+    var numbers = obj.value.replace(/\D/g, ''),
+    char = {0:'(',3:') ',6:' '};
+    obj.value = '';
+    for (var i = 0; i < numbers.length; i++) {
+      obj.value += (char[i]||'') + numbers[i];
+    }
+  }
+    
+  jQuery(document).ready(function(){
+
+    jQuery(".mul-select").select2({
+      placeholder: "Please select",
+      tags: true,
+    });
+
+    var needInfoForm = document.querySelector('.need-info-form');
+    if(needInfoForm != null) {
+      
+      // shows the first guardian section 
+      jQuery("#relationshipChoice").change(function() {
+        if (jQuery(this).val() == "mother") {
+          jQuery('#mother1').show();
+          jQuery('#father1').hide();
+          jQuery('#guardian1-1').hide();
+        } else if (jQuery(this).val() == "father") {
+          jQuery('#mother1').hide();
+          jQuery('#father1').show();
+          jQuery('#guardian1-1').hide();
+        } else if (jQuery(this).val() == "guardian1") {
+          jQuery('#mother1').hide();
+          jQuery('#father1').hide();
+          jQuery('#guardian1-1').show();
+          jQuery('#guardian2-1').hide();
+        } else {
+          jQuery('#mother1').hide();
+          jQuery('#father1').hide();
+          jQuery('#guardian1-1').hide();
+        }
+      });
+      jQuery("#relationshipChoice").trigger("change");
+      
+      // allows addition of an additional parent/guardian
+      jQuery("#addParentOrGuardian").change(function() {
+        if (jQuery(this).val() == "mother") {
+          jQuery('#mother2').show();
+          jQuery('#father2').hide();
+          jQuery('#guardian1-2').hide();
+        } else if (jQuery(this).val() == "father") {
+          jQuery('#mother2').hide();
+          jQuery('#father2').show();
+          jQuery('#guardian1-2').hide();
+        } else if (jQuery(this).val() == "guardian1") {
+          jQuery('#mother2').hide();
+          jQuery('#father2').hide();
+          jQuery('#guardian1-2').show();
+        } else {
+          jQuery('#mother2').hide();
+          jQuery('#father2').hide();
+          jQuery('#guardian1-2').hide();
+        }
+      });
+      jQuery("#addParentOrGuardian").trigger("change");
+      
+      // changes first dropdown depending on dropdown choice
+      jQuery("#relationshipChoice").change(function() {
+        if (jQuery(this).val() == "mother") {
+          jQuery("#addParentOrGuardian option:nth-child(2)").hide();
+          jQuery("#addParentOrGuardian option:nth-child(3)").show();
+          jQuery("#addParentOrGuardian option:nth-child(4)").show();
+        } else if (jQuery(this).val() == "father") {
+          jQuery("#addParentOrGuardian option:nth-child(3)").hide();
+          jQuery("#addParentOrGuardian option:nth-child(2)").show();
+          jQuery("#addParentOrGuardian option:nth-child(4)").show();
+        } else if (jQuery(this).val() == "guardian1") {
+          jQuery("#addParentOrGuardian option:nth-child(4)").hide();
+          jQuery("#addParentOrGuardian option:nth-child(2)").show();
+          jQuery("#addParentOrGuardian option:nth-child(3)").show();
+        } else {
+          jQuery("#addParentOrGuardian option:nth-child(2)").show();
+          jQuery("#addParentOrGuardian option:nth-child(3)").show();
+          jQuery("#addParentOrGuardian option:nth-child(4)").show();
+        }
+      });
+      jQuery("#relationshipChoice").trigger("change");
+      
+      // changes second dropdown depending on dropdown choice
+      jQuery("#addParentOrGuardian").change(function() {
+        if (jQuery(this).val() == "mother") {
+          jQuery("#relationshipChoice option:nth-child(2)").hide();
+          jQuery("#relationshipChoice option:nth-child(3)").show();
+          jQuery("#relationshipChoice option:nth-child(4)").show();
+        } else if (jQuery(this).val() == "father") {
+          jQuery("#relationshipChoice option:nth-child(3)").hide();
+          jQuery("#relationshipChoice option:nth-child(2)").show();
+          jQuery("#relationshipChoice option:nth-child(4)").show();
+        } else if (jQuery(this).val() == "guardian1") {
+          jQuery("#relationshipChoice option:nth-child(4)").hide();
+          jQuery("#relationshipChoice option:nth-child(2)").show();
+          jQuery("#relationshipChoice option:nth-child(3)").show();
+        } else {
+          jQuery("#relationshipChoice option:nth-child(2)").show();
+          jQuery("#relationshipChoice option:nth-child(3)").show();
+          jQuery("#relationshipChoice option:nth-child(4)").show();
+        }
+      });
+      jQuery("#addParentOrGuardian").trigger("change");
+      
+      // adds second child
+      jQuery("#addChild").click(function() {
+        jQuery(".child2").toggleClass("child2-display");
+        jQuery("#addChild2").toggle();
+      });
+      
+      // adds third child
+      jQuery("#addChild2").click(function() {
+        jQuery(".child3").toggleClass("child3-display");
+        jQuery("#addChild3").toggle();
+      });
+      
+      // adds fourth child
+      jQuery("#addChild3").click(function() {
+        jQuery(".child4").toggleClass("child4-display");
+        jQuery("#addChild4").toggle();
+      });
+      
+      // make certain inputs required when visible
+      jQuery("form").change(function() {
+        jQuery(".required-when-visible").each(function(){
+          if(jQuery(this).is(":visible")){
+            jQuery(this).prop('required', true);
+          }
+        });
+      });
+      jQuery("form").trigger("change");
+      
+      // datepicker calendar
+      jQuery("#00N0r000000U5v1, #00N0r000000U5v7, #00N0r000000U5vD, #00N0r000000U5vJ").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        dateFormat: "mm/dd/yy",
+        maxDate: "0"
+      });
+    }
+  });
+</script>

@@ -1,0 +1,47 @@
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script> 
+
+  /*** PASTE THIS SCRIPT DIRECTLY INTO THE HEADERS AND FOOTERS EXTENSION ***
+  **** EDIT IT OFFLINE AND PASTE IN WHEN FINISHED - DO NOT EDIT FROM WITHIN THE PLUGIN ***/
+
+  (function validateForm() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Check if forms should be visible
+      var widget = document.querySelector('.widget_custom_html');
+      var form = document.querySelector('#web-to-lead-form');
+      var form2 = document.querySelector('.need-info-form');
+
+      function timestamp() { var response = document.getElementById("g-recaptcha-response"); if (response == null || response.value.trim() == "") {var elems = JSON.parse(document.getElementsByName("captcha_settings")[0].value);elems["ts"] = JSON.stringify(new Date().getTime());document.getElementsByName("captcha_settings")[0].value = JSON.stringify(elems); } } setInterval(timestamp, 500);
+
+      var $recaptcha = document.querySelector('#g-recaptcha-response');
+      if($recaptcha) {
+        $recaptcha.setAttribute('required', 'required');
+      }
+
+      // Prevent submission
+      if(form != null) {   
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      }
+
+      if(widget != null && form2 != null) {
+        widget.setAttribute('style', 'display:none');
+      }
+      
+      if(/register/.test(window.location.pathname)) {
+        widget.setAttribute('style', 'display:none');
+      }
+
+      if(/account/.test(window.location.pathname)) {
+        document.getElementById('user_email').setAttribute('type', 'hidden');
+        document.querySelector('label[for=\'user_email\']').innerHTML = 'Please get in touch with a YLDP representative if you need to change your email address';
+      }
+    }, false);
+  })();
+</script>
